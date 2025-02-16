@@ -1,0 +1,93 @@
+# The following resources in the kube-prometheus-stack can have resource requests and limits configured:
+# 
+# alertmanager.alertmanagerSpec.resources
+# prometheusOperator.admissionWebhooks.deployment.resources
+# prometheusOperator.admissionWebhooks.patch.resources
+# prometheusOperator.resources
+# prometheusOperator.prometheusConfigReloader.resources
+# prometheus.prometheusSpec.resources
+# thanosRuler.thanosRulerSpec.resources
+
+prometheus:
+  prometheusSpec:
+    resources:
+      requests:
+        cpu: "500m"     # Reduce CPU request
+        memory: "512Mi" # Reduce memory request
+      limits:
+        cpu: "700m"        # Reduce CPU limit
+        memory: "1Gi"   # Reduce memory limit
+    podMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelectorNilUsesHelmValues: false
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          resources:
+            requests:
+              storage: 100Gi
+
+alertmanager:
+  alertmanagerSpec:
+    
+    resources:
+      requests:
+        cpu: "200m"     # Reduce CPU request
+        memory: "256Mi" # Reduce memory request
+      limits:
+        cpu: "500m"        # Reduce CPU limit
+        memory: "512Mi"   # Reduce memory limit
+    
+prometheus-node-exporter:
+
+  resources:
+    requests:
+      cpu: "250m"      # Significantly reduce CPU request
+      memory: "512Mi"  # Reduce memory request
+    limits:
+      cpu: "500m"      # Reduce CPU limit
+      memory: "1Gi"    # Reduce memory limit
+      
+kube-state-metrics:
+  resources:
+    requests:
+      cpu: "100m"  # Reduce from 310m
+      memory: "64Mi"  # Reduce from 115Mi
+    limits:
+      cpu: "200m"  # Adjust as needed
+      memory: "100Mi"  # Adjust as needed
+
+prometheusOperator:
+  resources:
+    requests:
+      cpu: "250m"      # Significantly reduce CPU request
+      memory: "512Mi"  # Reduce memory request
+    limits:
+      cpu: "500m"      # Reduce CPU limit
+      memory: "1Gi"    # Reduce memory limit
+
+
+  prometheusConfigReloader:
+    resources:
+      requests:
+        cpu: "100m"     # Adjusted CPU request
+        memory: "128Mi" # Adjusted memory request
+      limits:
+        cpu: "200m"     # Adjusted CPU limit
+        memory: "256Mi" # Adjusted memory limit
+      
+grafana:
+  persistence:
+    enabled: true
+    type: sts
+    storageClassName: "managed"
+    accessModes:
+      - ReadWriteOnce
+    size: 100Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1.5Gi
+
