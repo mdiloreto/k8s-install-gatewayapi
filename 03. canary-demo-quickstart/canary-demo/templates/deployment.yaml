@@ -36,18 +36,18 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-canary
+  name: {{ .Release.Name }}-v2-canary
   labels:
-    app: {{ .Release.Name }}-canary
+    app: {{ .Release.Name }}-v2-canary
 spec:
   replicas: {{ .Values.canary.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-canary
+      app: {{ .Release.Name }}-v2-canary
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-canary
+        app: {{ .Release.Name }}-v2-canary
     spec:
       containers:
         - name: {{ .Chart.Name }}

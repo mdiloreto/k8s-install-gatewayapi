@@ -1,32 +1,27 @@
-{{- if .Values.gateway.enabled }}
+
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: {{ .Chart.Name }}-gtw
+  name: canary-demo-gtw
 spec:
-  gatewayClassName: {{ .Values.gateway.gatewayClassName }}
+  gatewayClassName: istio
   listeners:
-  {{- if .Values.gateway.http }}
   - protocol: HTTP
     port: 80
     name: http-web-gw
     allowedRoutes:
       namespaces:
         from: Same
-  {{- end }}
-  {{- if .Values.gateway.https }}
   - protocol: HTTPS
     port: 443
     name: https-web-gw
     tls:
       certificateRefs:
-      - name: {{ .Values.gateway.tlsSecretName }}
+      - name: canary-demo-tls
     allowedRoutes:
       namespaces:
         from: Same
-  {{- end }}
 
-{{- if .Values.gateway.http }}
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -34,16 +29,14 @@ metadata:
   name: foo-http
 spec:
   parentRefs:
-  - name: {{ .Chart.Name }}-gtw
+  - name: canary-demo-gtw
   hostnames:
-  - {{ .Values.gateway.hostname | quote }}
+  - "site.multiclouds.tech"
   rules:
   - backendRefs:
     - name: foo-svc
       port: 80
-{{- end }}
 
-{{- if .Values.gateway.https }}
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -51,13 +44,10 @@ metadata:
   name: foo-https
 spec:
   parentRefs:
-  - name: {{ .Chart.Name }}-gtw
+  - name: canary-demo-gtw
   hostnames:
-  - {{ .Values.gateway.hostname | quote }}
+  - "site.multiclouds.tech"
   rules:
   - backendRefs:
     - name: foo-svc
       port: 80
-{{- end }}
-
-{{- end }}

@@ -12,7 +12,11 @@ service:
 
 gateway:
   enabled: true
-  host: "canary-demo.local"
+  https: true
+  http: true
+  tlsSecretName: "canary-demo-tls"
+  gatewayClassName: "nginx"
+  hostname: "site.multiclouds.tech"
 
 canary:
   enabled: false

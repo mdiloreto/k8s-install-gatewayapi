@@ -1,0 +1,1 @@
+kubectl create secret tls canary-demo-tls --cert=cert.cer --key=cert.key -n canary-demo

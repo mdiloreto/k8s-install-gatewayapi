@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: foo-v1
+  namespace: gateway-demo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: foo
+  template:
+    metadata:
+      labels:
+        app: foo
+    spec:
+      containers:
+      - name: foo-v1
+        image: nginxdemos/hello:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: foo-v1-svc
+  namespace: gateway-demo
+spec:
+  selector:
+    app: foo
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
