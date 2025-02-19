@@ -23,7 +23,7 @@ spec:
   - backendRefs:
     - name: foo-v1-svc
       port: 80
-      weight: 50
+      weight: 100
     - name: foo-svc-v2
       port: 80
-      weight: 50
+      weight: 0
