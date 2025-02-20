@@ -8,19 +8,6 @@ spec:
   - name: prod-web
   rules:
   - backendRefs:
-    - name: foo-svc
-      port: 80
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: foo
-  namespace: gateway-demo
-spec:
-  parentRefs:
-  - name: prod-web
-  rules:
-  - backendRefs:
     - name: foo-v1-svc
       port: 80
       weight: 100

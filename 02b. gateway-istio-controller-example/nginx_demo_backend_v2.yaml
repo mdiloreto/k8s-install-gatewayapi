@@ -16,11 +16,6 @@ spec:
       containers:
       - name: foo
         image: nginxdemos/hello:latest
-        env:
-        - name: BACKGROUND
-          value: "#BCD7F0"
-        - name: TEXT
-          value: "Hello from foo-v2!"
         ports:
         - containerPort: 80
 ---
