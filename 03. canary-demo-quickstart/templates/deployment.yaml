@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Release.Name }}-v1"
+  labels:
+    app: "{{ .Release.Name }}-v1"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: "{{ .Release.Name }}-v1"
+  template:
+    metadata:
+      labels:
+        app: "{{ .Release.Name }}-v1"
+    spec:
+      containers:
+        - name: "{{ .Chart.Name }}-v1"
+          image: "{{ .Values.container.image }}:{{ .Values.container.imagetag }}"
+          ports:
+          - containerPort: {{ .Values.container.containerPort }}
+
+---
+{{- if .Values.canary.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Release.Name }}-v2"
+  labels:
+    app: "{{ .Release.Name }}-v2"
+spec:
+  replicas: {{ .Values.canary.replicaCount }}
+  selector:
+    matchLabels:
+      app: "{{ .Release.Name }}-v2"
+  template:
+    metadata:
+      labels:
+        app: "{{ .Release.Name }}-v2"
+    spec:
+      containers:
+        - name: "{{ .Values.Container.Name }}-v2"
+          image: "{{ .Values.container.image }}:{{ .Values.container.imagetag }}"
+          ports:
+            - containerPort: {{ .Chart.Container.containerPort }}
+{{- end }}

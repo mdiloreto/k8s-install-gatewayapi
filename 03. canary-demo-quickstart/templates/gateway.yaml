@@ -2,7 +2,7 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: {{ .Chart.Name }}-gtw
+  name: "{{ .Chart.Name }}-gtw"
 spec:
   gatewayClassName: {{ .Values.gateway.gatewayClassName }}
   listeners:
@@ -26,7 +26,6 @@ spec:
         from: Same
   {{- end }}
 
-{{- if .Values.gateway.http }}
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -34,30 +33,18 @@ metadata:
   name: foo-http
 spec:
   parentRefs:
-  - name: {{ .Chart.Name }}-gtw
+  - name: "{{ .Chart.Name }}-gtw"
   hostnames:
   - {{ .Values.gateway.hostname | quote }}
   rules:
   - backendRefs:
-    - name: foo-svc
-      port: 80
-{{- end }}
-
-{{- if .Values.gateway.https }}
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: foo-https
-spec:
-  parentRefs:
-  - name: {{ .Chart.Name }}-gtw
-  hostnames:
-  - {{ .Values.gateway.hostname | quote }}
-  rules:
-  - backendRefs:
-    - name: foo-svc
-      port: 80
-{{- end }}
+    - name: "{{ .Values.service.name }}-v1"
+      port: {{ .Values.service.port }}
+      weight: {{- if .Values.canary.enabled }} {{ sub 100 .Values.canary.weight }} {{- else }} 100 {{- end }}
+    {{- if .Values.canary.enabled }}
+    - name: "{{ .Values.service.name }}-v2"
+      port: {{ .Values.service.port }}
+      weight: {{ .Values.canary.weight }}
+    {{- end }}
 
 {{- end }}

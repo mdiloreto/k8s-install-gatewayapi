@@ -1,0 +1,23 @@
+replicaCount: 3
+
+container:
+  image: nginxdemos/hello
+  tag: latest
+  containerPort: 80
+
+service:
+  port: 80
+  targetPort: 80
+
+gateway:
+  enabled: true
+  https: true
+  http: true
+  tlsSecretName: "canary-demo-tls"
+  gatewayClassName: "istio"
+  hostname: "site.multiclouds.tech"
+
+canary:
+  enabled: false
+
+
