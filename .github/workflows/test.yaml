@@ -1,0 +1,18 @@
+on:
+    push:
+      branches:
+        - main
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v4  # Ensure the repo is available
+            
+          - name: Semantic version
+            id: semver
+            uses: lukaszraczylo/semver-generator@1.12.379 # Use commit SHA for version
+            with:
+              config_file: semver.yaml
+              repository_local: true
